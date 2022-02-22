@@ -1,6 +1,6 @@
 # A guide to using BOSH
 
-This is the source for the BOSH guide - http://mariash.github.io/learn-bosh.
+This is the source for the BOSH guide - http://maxim-hansen.github.io/learn-bosh.
 
 All section files are in the `sections` folder.
 

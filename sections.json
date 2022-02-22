@@ -4,7 +4,6 @@
   },
   "prepare" : {
     "prepare" : "Prepare",
-    "setup_bosh_environment": "Setup BOSH environment",
     "log_in": "Log in"
   },
   "deploy" : {

@@ -1,34 +1,29 @@
-<%= circled_title(2, "Log in") %>
+<%= circled_title(1, "Log in") %>
 
-<p>Once VM with BOSH <b>Director</b> is running, point your CLI to it, saving the environment with the alias <b>vbox</b>:</p>
+<p>Once VM with BOSH <b>Director</b> is running, point your CLI to it, saving the environment with the alias <b>playground</b>:</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e 192.168.50.6 alias-env vbox --ca-cert <(bosh int vbox/creds.yml --path /director_ssl/ca)</h4>
-  <h4 class="terminal-printout-text">Using environment '192.168.50.6' as anonymous user
+  <h4 class="terminal-code-text">$ bosh -e 172.16.174.221 alias-env playground --ca-cert <(bosh int playground-bosh/creds.yml --path /director_ssl/ca)</h4>
+  <h4 class="terminal-printout-text">Using environment '172.16.174.221' as anonymous user
 
-Name      Bosh Lite Director
-UUID      ...
-Version   261.4.0 (00000000)
-CPI       warden_cpi
-Features  compiled_package_cache: disabled
-          config_server: disabled
-          dns: disabled
-          snapshots: disabled
-User      (not logged in)
+Name               playground-bosh
+UUID               d3bfcf8a-b9e7-416b-982e-ad81daeb973d
+Version            271.20.0 (00000000)
+Director Stemcell  ubuntu-bionic/1.59
+CPI                vsphere_cpi
+Features           config_server: enabled
+                   local_dns: enabled
+                   power_dns: disabled
+                   snapshots: disabled
+User               (not logged in)
 
 Succeeded</h4>
 </div>
 
-<p>Obtain generated password to BOSH <b>Director</b>:</p>
+<p>Log in using your AD username and password:</p>
 
 <div class="terminal-block">
-<h4 class="terminal-code-text">$ bosh int vbox/creds.yml --path /admin_password</h4>
-</div>
-
-<p>Log in using <b>admin</b> username and generated password:</p>
-
-<div class="terminal-block">
-<h4 class="terminal-code-text">$ bosh -e vbox login</h4>
+<h4 class="terminal-code-text">$ bosh -e playground login</h4>
 </div>
 
 <p>Now we are ready to deploy!</p>

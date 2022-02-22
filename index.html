@@ -7,7 +7,7 @@
   <script type="text/javascript" src="fullpage_js/vendors/jquery.slimscroll.min.js"></script>
   <script type="text/javascript" src="fullpage_js/jquery.fullPage.min.js"></script>
   <link rel="stylesheet" type="text/css" href="fullpage_js/jquery.fullPage.css" />
-  
+
   <link rel="stylesheet" type="text/css" href="css/style.css" />
 
   <script type="text/javascript">
@@ -17,8 +17,8 @@
           navigationPosition: 'right',
           scrollOverflow: true,
           css3: false,
-          anchors: ["introduction", "prepare", "setup_bosh_environment", "log_in", "deploy", "create_release", "upload_stemcell", "run_deploy", "modify", "modify_release", "scale", "change_properties", "when_something_goes_wrong", "failing_service", "failing_vm", "failing_deploy", "done"],
-          navigationTooltips: ["Introduction", "Prepare", "Setup BOSH environment", "Log in", "Deploy", "Create release", "Upload stemcell", "Run deploy", "Modify deployment", "Modify release", "Scale", "Change properties", "When something goes wrong", "Failing service", "Failing VM", "Failing deploy", "Done!"],
+          anchors: ["introduction", "prepare", "log_in", "deploy", "create_release", "upload_stemcell", "run_deploy", "modify", "modify_release", "scale", "change_properties", "when_something_goes_wrong", "failing_service", "failing_vm", "failing_deploy", "done"],
+          navigationTooltips: ["Introduction", "Prepare", "Log in", "Deploy", "Create release", "Upload stemcell", "Run deploy", "Modify deployment", "Modify release", "Scale", "Change properties", "When something goes wrong", "Failing service", "Failing VM", "Failing deploy", "Done!"],
         });
     });
   </script>
@@ -27,23 +27,25 @@
 
 <body>
   <div id="fullpage">
-    
+
     <div class="section intro"><div class="center-column"><h2>A guide to using</h2>
-<h1>BOSH</h1>
+<h1>BOSH Director</h1>
 
-<p>This tutorial gives a simple introduction to BOSH. If you never deployed with BOSH or never heard about it this step-by-step guide will bring you up to speed.</p>
+<p>This tutorial gives a simple introduction to using a BOSH Director. If you already have a BOSH Director but have never used it to deploy or manage software, this step-by-step guide will bring you up to speed!</p>
 
-<p>Learn more: 
+<p>Learn more:
 <ul>
-<li><a href="http://bosh.io/docs/about.html">bosh.io: What is BOSH?</a></li>
+<li><a href="http://bosh.io/docs/">bosh.io: What is BOSH?</a></li>
 <li><a href="http://bosh.io/docs/problems.html">bosh.io: What Problems Does BOSH Solve?</a></li>
 </p>
 
-<button onClick="$.fn.fullpage.moveSectionDown();" id="start-button">Start</button></div></div>
-    
+<button onClick="$.fn.fullpage.moveSectionDown();" id="start-button">Start</button>
+</div></div>
+
     <div class="section prepare"><div class="center-column"><h1>Prepare</h1>
 
-<p>We are going to use local BOSH environment provided by VirtualBox (known working version 5.1+). We will install BOSH server (<b>Director</b>) using BOSH CLI. Once VM with <b>Director</b> is running we are going to use BOSH CLI to send commands to the <b>Director</b>.</p>
+<p>In order to use the BOSH Director, we need to have the BOSH CLI installed on our local machine or a jumphost.</p>
+<p>Follow these <a href="https://bosh.io/docs/cli-v2-install/">instructions</a> to install it.</p>
 
 <p>Learn more:
 <ul>
@@ -52,7 +54,7 @@
 
 <button onClick="$.fn.fullpage.moveSectionDown();" id="next-button">Next</button>
 </div></div>
-    
+
     <div class="section prepare"><div class="center-column"><div class="view-heading">
   <div class="circle-container">
     <div class="circle-number">
@@ -60,96 +62,48 @@
     </div>
   </div>
   <div class="view-heading-text-container">
-    <h2>Setup BOSH environment</h2>
-  </div>
-</div> 
-
-<p>BOSH CLI is a command line interface to the <b>Director</b>. Follow these <a href="https://bosh.io/docs/cli-v2#install">instructions</a> to install it.</p>
-
-<p>We are going to use <b>bosh create-env</b> command to install BOSH <b>Director</b>. <b>bosh create-env</b> command provides a way to install initial VM with BOSH <b>Director</b> on any IaaS (AWS, GCP, etc). In our case we will use VirtualBox as our infrastructure provider.</p>
-
-<p>First get configuration files that specify BOSH environment in VirtualBox. And run <b>bosh create-env</b> as following:</p>
-
-<div class="terminal-block">
-  <h4 class="terminal-code-text">$ git clone https://github.com/cloudfoundry/bosh-deployment bosh-deployment</h4>
-  <h4 class="terminal-code-text">$ mkdir vbox</h4>
-  <h4 class="terminal-code-text">$ bosh create-env bosh-deployment/bosh.yml \<br>
-  --state vbox/state.json \<br>
-  -o bosh-deployment/virtualbox/cpi.yml \<br>
-  -o bosh-deployment/virtualbox/outbound-network.yml \<br>
-  -o bosh-deployment/bosh-lite.yml \<br>
-  -o bosh-deployment/bosh-lite-runc.yml \<br>
-  -o bosh-deployment/jumpbox-user.yml \<br>
-  --vars-store vbox/creds.yml \<br>
-  -v director_name="Bosh Lite Director" \<br>
-  -v internal_ip=192.168.50.6 \<br>
-  -v internal_gw=192.168.50.1 \<br>
-  -v internal_cidr=192.168.50.0/24 \<br>
-  -v outbound_network_name=NatNetwork</h4>
-</div>
-
-<p>In case of any issues see <a href="https://github.com/cloudfoundry/bosh-deployment/blob/master/docs/bosh-lite-on-vbox.md">bosh-deployment VirtualBox docs</a>.</p>
-
-<p>Learn more:
-<ul>
-<li><a href="https://bosh.io/docs/cli-v2.html#create-env">bosh.io: bosh create-env</a></li>
-</p>
-</div></div>
-    
-    <div class="section prepare"><div class="center-column"><div class="view-heading">
-  <div class="circle-container">
-    <div class="circle-number">
-      <h2>2</h2>
-    </div>
-  </div>
-  <div class="view-heading-text-container">
     <h2>Log in</h2>
   </div>
-</div> 
+</div>
 
-<p>Once VM with BOSH <b>Director</b> is running, point your CLI to it, saving the environment with the alias <b>vbox</b>:</p>
+<p>Once VM with BOSH <b>Director</b> is running, point your CLI to it, saving the environment with the alias <b>playground</b>:</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e 192.168.50.6 alias-env vbox --ca-cert <(bosh int vbox/creds.yml --path /director_ssl/ca)</h4>
-  <h4 class="terminal-printout-text">Using environment '192.168.50.6' as anonymous user
+  <h4 class="terminal-code-text">$ bosh -e 172.16.174.221 alias-env playground --ca-cert <(bosh int playground-bosh/creds.yml --path /director_ssl/ca)</h4>
+  <h4 class="terminal-printout-text">Using environment '172.16.174.221' as anonymous user
 
-Name      Bosh Lite Director
-UUID      ...
-Version   261.4.0 (00000000)
-CPI       warden_cpi
-Features  compiled_package_cache: disabled
-          config_server: disabled
-          dns: disabled
-          snapshots: disabled
-User      (not logged in)
+Name               playground-bosh
+UUID               d3bfcf8a-b9e7-416b-982e-ad81daeb973d
+Version            271.20.0 (00000000)
+Director Stemcell  ubuntu-bionic/1.59
+CPI                vsphere_cpi
+Features           config_server: enabled
+                   local_dns: enabled
+                   power_dns: disabled
+                   snapshots: disabled
+User               (not logged in)
 
 Succeeded</h4>
 </div>
 
-<p>Obtain generated password to BOSH <b>Director</b>:</p>
+<p>Log in using your AD username and password:</p>
 
 <div class="terminal-block">
-<h4 class="terminal-code-text">$ bosh int vbox/creds.yml --path /admin_password</h4>
-</div>
-
-<p>Log in using <b>admin</b> username and generated password:</p>
-
-<div class="terminal-block">
-<h4 class="terminal-code-text">$ bosh -e vbox login</h4>
+<h4 class="terminal-code-text">$ bosh -e playground login</h4>
 </div>
 
 <p>Now we are ready to deploy!</p>
 </div></div>
-    
+
     <div class="section deploy"><div class="center-column"><h1>Deploy</h1>
 
 <p>Before we proceed we need to understand what BOSH needs to deploy software.</p>
 
 <h3>What to deploy</h3>
-<p>Software that is deployed with BOSH needs to be packaged in a special format called a <b>release</b>. For each service that will be deployed, a release needs to contain source files, configuration files, installation scripts, etc. For example, a redis release would contain the source code for redis, redis configuration defaults and redis init scripts.</p>
+<p>Software that is deployed with BOSH needs to be packaged in a special format called a <b>release</b>. For each service or application that will be deployed, a release needs to contain source or binary files, configuration files, installation scripts, etc. For example, a Redis release would contain the redis binary blobs, redis configuration defaults and redis init scripts.</p>
 
 <h3>How to deploy</h3>
-<p>Each BOSH deployment needs to provide a specially structured configuration file - <b>deployment manifest</b>. This file defines what resources are going to be deployed, what services are going to be running on each of resources and properties that will be passed to services configuration files. For example, for a redis deployment manifest, there are entries for how many and what size redis VMs there should be and how redis should be configured.</p>
+<p>Each BOSH deployment needs to provide a specially structured configuration file called a <b>deployment manifest</b>. This file defines what resources are going to be deployed, what services or applications are going to be running on each of the resources, as well as what properties that will be passed to the service's or application's configuration file(s). For example, for a Redis deployment manifest, there are entries for how many and what size Redis VMs there should be and how Redis should be configured.</p>
 
 <p>Learn more:
 <ul>
@@ -159,7 +113,7 @@ Succeeded</h4>
 
 <button onClick="$.fn.fullpage.moveSlideRight();" id="next-button">Next</button>
 </div></div>
-    
+
     <div class="section deploy"><div class="center-column"><div class="view-heading">
   <div class="circle-container">
     <div class="circle-number">
@@ -169,25 +123,25 @@ Succeeded</h4>
   <div class="view-heading-text-container">
     <h2>Create BOSH release</h2>
   </div>
-</div> 
+</div>
 
 <p>We are going to use a simple BOSH release that deploys an http server.</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ git clone https://github.com/mariash/learn-bosh-release learn-bosh-release</h4>
+  <h4 class="terminal-code-text">$ git clone https://github.com/maxim-hansen/learn-bosh-release learn-bosh-release</h4>
   <h4 class="terminal-code-text">$ cd learn-bosh-release</h4>
   <h4 class="terminal-code-text">$ bosh create-release</h4>
 </div>
 
 <p>Upload generated release to <b>Director</b>:</p>
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e vbox upload-release</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground upload-release</h4>
 </div>
 
 <p>Check uploaded releases:</p>
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e vbox releases</h4>
-  <h4 class="terminal-printout-text">Using environment '192.168.50.6' as client 'admin'
+  <h4 class="terminal-code-text">$ bosh -e playground releases</h4>
+  <h4 class="terminal-printout-text">Using environment '172.16.174.221' as user 'maxim.hansen'
 
 Name        Version  Commit Hash
 learn-bosh  0+dev.1  fd90933
@@ -200,7 +154,7 @@ learn-bosh  0+dev.1  fd90933
 <li><a href="http://bosh.io/docs/create-release.html">bosh.io: Creating a Release</a></li>
 </p>
 </div></div>
-    
+
     <div class="section deploy"><div class="center-column"><div class="view-heading">
   <div class="circle-container">
     <div class="circle-number">
@@ -210,27 +164,31 @@ learn-bosh  0+dev.1  fd90933
   <div class="view-heading-text-container">
     <h2>Upload stemcell</h2>
   </div>
-</div> 
+</div>
 
-<p>A Stemcell is an operating system image that BOSH uses to create VMs. Official BOSH stemcells are maintained with security updates at <a href="https://bosh.io">bosh.io</a>.</p>
+<p>A Stemcell is an operating system image that BOSH uses to create VMs. Official BOSH stemcells are maintained with security updates at <a href="https://bosh.io/stemcells/">bosh.io/stemcells</a>.</p>
 
 <p>Upload stemcell to <b>Director</b>.</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ wget --content-disposition https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent</h4>
-  <h4 class="terminal-code-text">$ bosh -e vbox upload-stemcell bosh-stemcell-*-warden-boshlite-ubuntu-trusty-go_agent.tgz</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground upload-stemcell --sha1 4a53a630705e2952ff5e7b883e1da6a5f46472e4 \
+https://bosh.io/d/stemcells/bosh-vsphere-esxi-ubuntu-bionic-go_agent?v=1.61</h4>
 </div>
 
   <p>See uploaded stemcells:</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e vbox stemcells</h4>
-  <h4 class="terminal-printout-text">Using environment '192.168.50.6' as client 'admin'
+  <h4 class="terminal-code-text">$ bosh -e playground stemcells</h4>
+  <h4 class="terminal-printout-text">Using environment '172.16.174.221' as user 'maxim.hansen'
 
-Name                                         Version
-bosh-warden-boshlite-ubuntu-trusty-go_agent  [your stemcell version]
+Name                                      Version  OS
+bosh-vsphere-esxi-ubuntu-bionic-go_agent  1.61*    ubuntu-bionic
 
-1 stemcells</h4>
+(*) Currently deployed
+
+1 stemcells
+
+Succeeded</h4>
 </div>
 
 <p>Learn more:
@@ -239,7 +197,7 @@ bosh-warden-boshlite-ubuntu-trusty-go_agent  [your stemcell version]
 <li><a href="http://bosh.io/stemcells">Full list of available stemcells</a></li>
 </p>
 </div></div>
-    
+
     <div class="section deploy"><div class="center-column"><div class="view-heading">
   <div class="circle-container">
     <div class="circle-number">
@@ -249,40 +207,33 @@ bosh-warden-boshlite-ubuntu-trusty-go_agent  [your stemcell version]
   <div class="view-heading-text-container">
     <h2>And deploy</h2>
   </div>
-</div> 
+</div>
 
 <p>Run deploy by providing path to deployment manifest. Deployment manifest specifies what services to deploy, their properties and resources configuration.</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e vbox -d learn-bosh deploy manifest.yml</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground -d learn-bosh deploy manifest.yml</h4>
 </div>
 
 <p>See the list of deployed instances as it was specified in manifest:</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e vbox instances</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground instances</h4>
   <h4 class="terminal-printout-text">...
 Deployment 'learn-bosh'
 
-Instance  Process State  AZ  IPs
-app/guid  running        -   10.244.0.2
+Instance  Process State  AZ        IPs
+app/guid  running        vsphere   1.2.3.4
 
 1 instances
 ...</h4>
 </div>
 
-<p>Add route to VirtualBox network:</p>
-<div class="terminal-block">
-  <h4 class="terminal-code-text">$ sudo route add -net 10.244.0.0/16    192.168.50.6 # Mac OS X</h4>
-  <h4 class="terminal-code-text">$ sudo route add -net 10.244.0.0/16 gw 192.168.50.6 # Linux</h4>
-  <h4 class="terminal-code-text">$ route add           10.244.0.0/16    192.168.50.6 # Windows</h4>
-</div>
-
 <p>See that our service is up and running.</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ curl 10.244.0.2:8080</h4>
-  <h4 class="terminal-printout-text">Hello, Maria from ...</h4>
+  <h4 class="terminal-code-text">$ curl 1.2.3.4:8080</h4>
+  <h4 class="terminal-printout-text">Hello, BOSH User from ...</h4>
 </div>
 
 <p>Learn more:
@@ -291,13 +242,13 @@ app/guid  running        -   10.244.0.2
 <li><a href="http://bosh.io/docs/deploying-step-by-step.html">bosh.io: Deploying Step-by-step</a></li>
 </p>
 </div></div>
-    
+
     <div class="section modify"><div class="center-column"><h1>Modify Deployment</h1>
 
 <p>Now we will update our deployment with new version of software. We will modify some properties. And we are going to scale our deployment.</p>
 
 <button onClick="$.fn.fullpage.moveSectionDown();" id="next-button">Next</button></div></div>
-    
+
     <div class="section modify"><div class="center-column"><div class="view-heading">
   <div class="circle-container">
     <div class="circle-number">
@@ -307,28 +258,28 @@ app/guid  running        -   10.244.0.2
   <div class="view-heading-text-container">
     <h2>Modify release</h2>
   </div>
-</div> 
+</div>
 
 <p>BOSH makes it easy to modify and deploy new versions of software. Let's modify our release source files.</p>
 
-<p>In release folder open <b>src/simple_server/app.rb</b> and change the name to yours.</p>
+<p>In release folder open <b>src/simple_server/app.rb</b> and change the name variable on <a href="https://github.com/maxim-hansen/learn-bosh-release/blob/master/src/simple_server/app.rb#L8">line 8</a> to yours.</p>
 
 <p>Create new version of release (force option is used to ignore warning about local changes), upload new version of release to <b>Director</b> and deploy!</p>
 
 <div class="terminal-block">
   <h4 class="terminal-code-text">$ bosh create-release --force</h4>
-  <h4 class="terminal-code-text">$ bosh -e vbox upload-release</h4>
-  <h4 class="terminal-code-text">$ bosh -e vbox -d learn-bosh deploy manifest.yml</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground upload-release</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground -d learn-bosh deploy manifest.yml</h4>
 </div>
 
 <p>See that the updated version was deployed:</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ curl 10.244.0.2:8080</h4>
+  <h4 class="terminal-code-text">$ curl 1.2.3.4:8080</h4>
   <h4 class="terminal-printout-text">Hello, you from ...</h4>
 </div>
 </div></div>
-    
+
     <div class="section modify"><div class="center-column"><div class="view-heading">
   <div class="circle-container">
     <div class="circle-number">
@@ -338,28 +289,28 @@ app/guid  running        -   10.244.0.2
   <div class="view-heading-text-container">
     <h2>Scale deployment</h2>
   </div>
-</div> 
+</div>
 
 <p>With BOSH it is easy to scale deployments. All you need to do is modify number of instances in manifest file.</p>
 
-<p>Open <b>manifest.yml</b> and change number of instances under job from 1 to 2. Add another IP to list of job static IPs: 10.244.0.6.</p>
+<p>Open <b>manifest.yml</b> and change the number of instances under job from 1 to 2.</p>
 
 <p>Run deploy:</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e vbox -d learn-bosh deploy manifest.yml</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground -d learn-bosh deploy manifest.yml</h4>
 </div>
 
 <p>Check that 2 instances were deployed:</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e vbox instances</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground instances</h4>
   <h4 class="terminal-printout-text">...
 Deployment 'learn-bosh'
 
 Instance    Process State  AZ  IPs
-app/guid-1  running        -   10.244.0.6
-app/guid-2  running        -   10.244.0.2
+app/guid-1  running        -   1.2.3.4
+app/guid-2  running        -   1.2.3.5
 
 2 instances
 ...</h4>
@@ -368,13 +319,13 @@ app/guid-2  running        -   10.244.0.2
 <p>See that we have 2 instances of our service running:</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ curl 10.244.0.2:8080</h4>
+  <h4 class="terminal-code-text">$ curl 1.2.3.4:8080</h4>
   <h4 class="terminal-printout-text">Hello, you from &lt;uuid-1&gt;</h4>
-  <h4 class="terminal-code-text">$ curl 10.244.0.6:8080</h4>
+  <h4 class="terminal-code-text">$ curl 1.2.3.5:8080</h4>
   <h4 class="terminal-printout-text">Hello, you from &lt;uuid-2&gt;</h4>
 </div>
 </div></div>
-    
+
     <div class="section modify"><div class="center-column"><div class="view-heading">
   <div class="circle-container">
     <div class="circle-number">
@@ -384,30 +335,30 @@ app/guid-2  running        -   10.244.0.2
   <div class="view-heading-text-container">
     <h2>Change properties</h2>
   </div>
-</div> 
+</div>
 
 <p>Every release can specify a set of properties that need to be set in deployment manifest and provided to service. For example, that can be database credentials, address of another service, etc.</p>
 
 <p>Our release allows to change property <b>port</b> on which server is listening. You can see the list of properties that can be modified in <b>learn-bosh-release/jobs/app/spec</b>. Let's open <b>manifest.yml</b> and under the section <b>properties</b> set the value of <b>port</b> to <b>8888</b>. Now we can just re-deploy our manifest changes. Note, we don't need to build new release version, configuration files will be regenerated with new properties.</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e vbox -d learn-bosh deploy manifest.yml</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground -d learn-bosh deploy manifest.yml</h4>
 </div>
 
 <p>Let's see that our property was changed:</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ curl 10.244.0.2:8888</h4>
+  <h4 class="terminal-code-text">$ curl 1.2.3.4:8888</h4>
   <h4 class="terminal-printout-text">Hello, you from ...</h4>
 </div>
 </div></div>
-    
+
     <div class="section recover"><div class="center-column"><h1>When something goes wrong</h1>
 
 <p>BOSH provides a set of recovery mechanisms. Let's break our deployment and find ways to fix it.</p>
 
 <button onClick="$.fn.fullpage.moveSectionDown();" id="next-button">Next</button></div></div>
-    
+
     <div class="section recover"><div class="center-column"><div class="view-heading">
   <div class="circle-container">
     <div class="circle-number">
@@ -417,12 +368,12 @@ app/guid-2  running        -   10.244.0.2
   <div class="view-heading-text-container">
     <h2>Failing service</h2>
   </div>
-</div> 
+</div>
 
 <p>BOSH is using <a href="https://mmonit.com/monit/">monit</a> to monitor running services. If the service goes down it will bring it up. Let's watch how this works. SSH to one of instances:</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e vbox -d learn-bosh ssh app/0</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground -d learn-bosh ssh app/0</h4>
   <h4 class="terminal-code-text">$ sudo -i</h4>
   <h4 class="terminal-code-text"># watch monit summary</h4>
   <h4 class="terminal-printout-text">The Monit daemon 5.2.5 uptime: 2m
@@ -435,7 +386,7 @@ System 'system_localhost'           running
 <p>In a separate window (on host) let's kill our runnning server:</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ curl 10.244.0.2:8888/kill</h4>
+  <h4 class="terminal-code-text">$ curl 1.2.3.4:8888/kill</h4>
 </div>
 
 <p>Back in the instance window notice that monit will report process as 'Does not exist' and after some period service will be brought back up by monit again.</p>
@@ -445,7 +396,7 @@ System 'system_localhost'           running
 <li><a href="http://bosh.io/docs/vm-monit.html">bosh.io: Process monitoring with Monit</a></li>
 </p>
 </div></div>
-    
+
     <div class="section recover"><div class="center-column"><div class="view-heading">
   <div class="circle-container">
     <div class="circle-number">
@@ -455,52 +406,51 @@ System 'system_localhost'           running
   <div class="view-heading-text-container">
     <h2>Failing VM</h2>
   </div>
-</div> 
+</div>
 
 <p>What if there is a problem with instance that is running our service? BOSH offers manual and automatic recovery when there are problems with infrastructure resources like VMs or disks. In this exercise we are going to kill one of our instances and use manual recovery option.</p>
 
-<p>Lets destroy one of our instances. SSH to VirtualBox VM.</p>
+<p>Lets destroy one of our instances.</p>
 
+<p>Get the VM CID ("Cloud ID") for the instance we want to destroy.</p>
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh int vbox/creds.yml --path /jumpbox_ssh/private_key > jumpbox.key</h4>
-  <h4 class="terminal-code-text">$ chmod 600 jumpbox.key</h4>
-  <h4 class="terminal-code-text">$ ssh jumpbox@192.168.50.6 -i jumpbox.key</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground -d learn-bosh vms</h4>
+  <h4 class="terminal-printout-text">Deployment 'learn-bosh'
+
+Instance    Process State  AZ       IPs      VM CID
+app/guid-1  running        vsphere  1.2.3.4  vm-guid
+app/guid-2  running        vsphere  1.2.3.5  vm-guid
+  </h4>
 </div>
 
-<p>Our VirtualBox environment is using <b>Warden</b> to manage resources. Warden is a Linux container management tool. Each container represents one instance. On VirtualBox VM kill one of Warden containers.</p>
-
-<div class="terminal-block">
-  <h4 class="terminal-code-text">$ wget -qO - http://127.0.0.1:7777/containers</h4>
-  <h4 class="terminal-printout-text">{"handles":["id-1","id-2"]}</h4>
-  <h4 class="terminal-code-text">$ wget -qO - --method=DELETE http://127.0.0.1:7777/containers/id-1</h4>
-</div>
+<p>Log into the vSphere Client UI, search for the VM CID. Once you've found the VM for the instance you want to destroy, force stop it and delete it from disk.</p>
 
 <p>Let's see that one of the instances is in a bad state:</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e vbox instances</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground instances</h4>
   <h4 class="terminal-printout-text">...
 Instance    Process State       IPs
-app/guid-1  running             10.244.0.6
-app/guid-2  unresponsive agent  10.244.0.2
+app/guid-1  running             1.2.3.4
+app/guid-2  unresponsive agent  1.2.3.5
 ...</h4>
 </div>
 
-<p>One of the components in BOSH is the Health Monitor. It independently watches system health and will bring missing instances back up by instructing infrastructure to recreate missing resources like VMs with the required persistent disk. Keep running <b>bosh -e vbox instances</b> and see that instance is brought up and service is running eventually.</p>
+<p>One of the components in BOSH is the Health Monitor. It independently watches system health and will bring missing instances back up by instructing infrastructure to recreate missing resources like VMs with the required persistent disk. Keep running <b>bosh -e playground instances</b> and see that instance is brought up and service is running eventually.</p>
 
 <p>Now let's turn off automatic repair and manually resolve the issue.</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e vbox update-resurrection off</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground update-resurrection off</h4>
 </div>
 
-<p>Kill one of the containers again as described above. Run cloud check and select option "Recreate VM and wait for processes to start".</p>
+<p>Destroy one of the VMs again as described above. Run cloud check and select option "Recreate VM and wait for processes to start".</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e vbox -d learn-bosh cloud-check</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground -d learn-bosh cloud-check</h4>
 </div>
 
-<p>Cloud check command allows to manually resolve issues when resources (VMs and persistent disks) are in a bad state. Run <b>bosh -e vbox instances</b> to see all instances running again.</p>
+<p>Cloud check command allows to manually resolve issues when resources (VMs and persistent disks) are in a bad state. Run <b>bosh -e playground instances</b> to see all instances running again.</p>
 
 <p>Learn more:
 <ul>
@@ -509,7 +459,7 @@ app/guid-2  unresponsive agent  10.244.0.2
 <li><a href="http://bosh.io/docs/vm-config.html">bosh.io: Configuration and file locations of BOSH VMs</a></li>
 </p>
 </div></div>
-    
+
     <div class="section recover"><div class="center-column"><div class="view-heading">
   <div class="circle-container">
     <div class="circle-number">
@@ -519,7 +469,7 @@ app/guid-2  unresponsive agent  10.244.0.2
   <div class="view-heading-text-container">
     <h2>Debugging failing deploy</h2>
   </div>
-</div> 
+</div>
 
 <p>When deploy command fails there are could be a number of reasons:</p>
 <ul>
@@ -527,23 +477,29 @@ app/guid-2  unresponsive agent  10.244.0.2
 <li>Infrastructure provider failed to create VM or disk (e.g. quota exceeded, instance type is not available)</li>
 <li>Properties required by release were not provided in manifest</li>
 
-<p>Let's add another job to our manifest <b>router</b> (it will redirect all requests between servers). Note, that since uploaded release already contains this job, we don't need to update release.</p>
+<p>Let's add another instance group to our manifest called <b>router</b> (it will redirect all requests between servers). Note, that since uploaded release already contains this job, we don't need to update release.</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-printout-text">- name: router
-  templates:
-  - name: router
-  instances: 1
-  resource_pool: default
+  <h4 class="terminal-printout-text">instance_groups:
+.
+.
+.
+- name: router
+  azs: [vsphere]
+  stemcell: default
+  vm_type: small
   networks:
-  - name: default
-    static_ips: [10.244.0.10]</h4>
+  - name: vsphere-default
+  instances: 1
+  jobs:
+  - name: router
+    release: learn-bosh</h4>
 </div>
 
 <p>Re-deploy with new job.</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e vbox -d learn-bosh deploy manifest.yml</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground -d learn-bosh deploy manifest.yml</h4>
   <h4 class="terminal-printout-warning">...Failed: `router/0 (...)' is not running after update.
   </h4>
 </div>
@@ -551,28 +507,26 @@ app/guid-2  unresponsive agent  10.244.0.2
 <p>Oh-oh, looks like deploy failed. Let's get our service logs, untar them and check stderr log.</p>
 
 <div class="terminal-block">
-  <h4 class="terminal-code-text">$ bosh -e vbox -d learn-bosh logs router/0</h4>
+  <h4 class="terminal-code-text">$ bosh -e playground -d learn-bosh logs router/0</h4>
 </div>
 
 <p>We should find this error: "At least one server must be provided". Router fails to route because there is no servers specified.</p>
 
-<p>Let's add a property to router job to specify our servers pointing to their static IPs and ports ("http://10.244.0.2:8888", "http://10.244.0.6:8888"), re-deploy and see it succeeds.</p>
+<p>Let's add a property to router job to specify our servers pointing to their static IPs and ports ("http://1.2.3.4:8888", "http://1.2.3.5:8888"), re-deploy and see it succeeds.</p>
 
-<p>Now running <b>curl -L http://10.244.0.10:8080</b> should give us responses from different servers.</p>
+<p>Now running <b>curl -L http://1.2.3.6:8080</b> should give us responses from different servers.</p>
 </div></div>
-    
+
     <div class="section last"><div class="center-column"><h1>Done!</h1>
 
 <p>In this tutorial we used BOSH to deploy services, updated our deployment with source changes, scaled the number of services and changed their properties. We recovered from failing service, failing VM and failing deploy.</p>
-
-<p>We were using VirtualBox environment with Warden CPI (Cloud Provider Interface). Warden is a Linux container management tool and Warden CPI abstracts VMs as Linux containers. The Director can work with any CPI that implements a certain API to manage IaaS resources. There are several supported CPIs for different IaaS providers: AWS, GCP, Openstack, vSphere and vCloud. Read more about CPIs here: <a href="http://bosh.io/docs/cpi-api-v1.html">http://bosh.io/docs/cpi-api-v1.html</a>.</p>
 
 <p>Learn more:
 <ul>
 <li><a href="https://bosh.io/docs">bosh.io: Docs</a></li>
 </p>
 </div></div>
-    
+
   </div>
 </body>
 </html>
